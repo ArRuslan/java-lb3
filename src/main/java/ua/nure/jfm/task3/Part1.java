@@ -58,20 +58,42 @@ public class Part1 {
 		return result.toString();
     }
 
-    public static String convert3(String input) { // TODO: fix tabs
+    public static String convert3(String input) {
 		Matcher matcher = PATTERN.matcher(input);
+		int lastNameMaxLen = 0;
+		int firstNameMaxLen = 0;
+		while (matcher.find()) {
+			int lastNameLen = matcher.group(4).length();
+			int firstNameLen = matcher.group(2).length();
+			int midNameLen = matcher.group(3) == null ? 0 : matcher.group(3).length()+1;
 
+			if (lastNameLen > lastNameMaxLen) {
+				lastNameMaxLen = lastNameLen;
+			}
+			if (firstNameLen + midNameLen > firstNameMaxLen) {
+				firstNameMaxLen = firstNameLen + midNameLen;
+			}
+		}
+
+		lastNameMaxLen++;
+		firstNameMaxLen++;
+
+		matcher = PATTERN.matcher(input);
 		StringBuilder result = new StringBuilder();
 		while (matcher.find()) {
 			if(!result.isEmpty()) {
 				result.append("\n");
 			}
 
-			result.append(matcher.group(4))
-					.append("\t")
-					.append(matcher.group(2))
-					.append(matcher.group(3) == null ? "" : " " + matcher.group(3))
-					.append("\t")
+			String lastName = matcher.group(4);
+			String firstName = matcher.group(2);
+			String midName = matcher.group(3) == null ? "" : (" "+matcher.group(3));
+
+			result.append(lastName)
+					.append(" ".repeat(lastNameMaxLen - lastName.length()))
+					.append(firstName)
+					.append(midName)
+					.append(" ".repeat(firstNameMaxLen - (firstName.length() + midName.length())))
 					.append(matcher.group(1));
 		}
 

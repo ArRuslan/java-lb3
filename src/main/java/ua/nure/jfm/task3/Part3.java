@@ -1,10 +1,5 @@
 package ua.nure.jfm.task3;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,5 +32,4 @@ public class Part3 {
 
 		return result;
 	}
-
 }
