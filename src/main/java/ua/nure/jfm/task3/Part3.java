@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 import static ua.nure.jfm.task3.Utils.getContent;
 
 public class Part3 {
-	//private static final Pattern PATTERN = Pattern.compile("\\b(\\w+)\\s+\\1\\b");
-	private static final Pattern PATTERN = Pattern.compile("\\b(\\w+)\\b(?=.*\\b(\\1)\\b)*");
+	private static final Pattern PATTERN = Pattern.compile("\\b([\\w\\p{IsCyrillic}]+)\\b");
+	//private static final Pattern PATTERN = Pattern.compile("\\b(\\w+)\\b(?=[\\s\\S]+?\\b(\\1)\\b)", Pattern.CASE_INSENSITIVE);
 	private static final String PATH = "part3.txt";
 
 	public static void main(String[] args) {
@@ -16,20 +16,73 @@ public class Part3 {
 		System.out.println(convert(lines));
 	}
 
-	public static String convert(String input) { // TODO: implement
-		Matcher matcher = PATTERN.matcher(input);
-		String result = input;
-
-		while (matcher.find()) {
-			System.out.println(matcher.group(1) + " - " + matcher.groupCount() + ":");
-			for(int i = 1; i <= matcher.groupCount(); i++) {
-				System.out.println("  " + matcher.group(i));
+	private static String swapCase(String input) {
+		StringBuilder result = new StringBuilder();
+		for(char ch : input.toCharArray()) {
+			if((ch >= 'a' && ch <= 'z') || (ch >= 'а' && ch <= 'я')) {
+				result.append((char)(ch - 32));
+			} else if((ch >= 'A' && ch <= 'Z') || (ch >= 'А' && ch <= 'Я')) {
+				result.append((char) (ch + 32));
+			} else if(ch == 'і') {
+				result.append('І');
+			} else if(ch == 'І') {
+				result.append('і');
+			} else {
+				//System.out.println("Unknown symbol: "+ch);
+				result.append(ch);
 			}
-			/*int wordLen = (matcher.end() - matcher.start() - 1) / 2;
-			String word = input.substring(matcher.start(), matcher.start() + wordLen);
-			result = result.substring(0, matcher.start() + wordLen + 1) + word.toUpperCase() + result.substring(matcher.end());*/
 		}
 
-		return result;
+		return result.toString();
+	}
+
+	public static String convert(String input) {
+		StringBuilder result = new StringBuilder();
+		Matcher matcher = PATTERN.matcher(input);
+
+		/*int start = 0;
+		while (matcher.find(start)) {
+			start = matcher.end();
+			String word = matcher.group(1).toLowerCase();
+			System.out.println("Match: " + matcher.group(1));
+			System.out.println("  " + matcher.group(1) + ", pos: " + matcher.start(1));
+			System.out.println("  " + matcher.group(2) + ", pos: " + matcher.start(2));
+			while(matcher.find()) {
+				if(!matcher.group(1).toLowerCase().equals(word)) {
+					continue;
+				}
+				System.out.println("  " + matcher.group(2) + ", pos: " + matcher.start(2));
+			}
+		}*/
+
+		while (matcher.find()) {
+			String word = matcher.group(1);
+			//System.out.println("Match: " + word);
+			Matcher prevMatcher = Pattern.compile("\\b("+word+")\\b", Pattern.CASE_INSENSITIVE).matcher(input.substring(0, matcher.start(1)));
+			int prevStart = -1;
+			int prevEnd = -1;
+			while (prevMatcher.find()) {
+				prevStart = prevMatcher.start();
+				prevEnd = prevMatcher.end();
+			}
+
+			if(prevStart < 0 || prevEnd < 0) {
+				//System.out.println("Previous not found, regex is "+prevMatcher.pattern().pattern());
+				matcher.appendReplacement(result, word);
+				continue;
+			}
+
+			if(result.substring(prevStart, prevEnd).equals(input.substring(prevStart, prevEnd))) {
+				//System.out.println("swapping case");
+				word = swapCase(word);
+			} else {
+				//System.out.println("\""+result.substring(prevStart, prevEnd)+"\" != \""+input.substring(prevStart, prevEnd)+"\"");
+			}
+
+			matcher.appendReplacement(result, word);
+		}
+
+		matcher.appendTail(result);
+		return result.toString();
 	}
 }

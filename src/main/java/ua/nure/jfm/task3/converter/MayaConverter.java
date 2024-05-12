@@ -17,6 +17,7 @@ public class MayaConverter {
 
 	public static String convert(String from) { // TODO: fix 100_000 and 3_999
 		int number = parseInt(from);
+		System.out.println("  Number: "+number);
 		if (number == 0) {
 			return AR[0];
 		}
@@ -31,6 +32,17 @@ public class MayaConverter {
 		return result.toString();
 	}
 
+	public static int backConvert(String from) {
+		int result = 0;
+		for(char ch : from.toCharArray()) {
+			if(ch == '\uD834')
+				continue;
+			result = result * 20 + ch - '\uDEE0';
+		}
+
+		return result;
+	}
+
 	public static void main(String[] args) {
 		System.out.println("All the digits:");
 		for (int j = 0; j < AR.length; j++) {
@@ -42,6 +54,10 @@ public class MayaConverter {
 		System.out.println("~~~");
 		System.out.println("100_000");
 		System.out.println(MayaConverter.convert("100_000"));
+
+		System.out.println("~~~~~~~~~~~~~~");
+		System.out.println(""+backConvert("\uD834\uDEE6\uD834\uDEEA\uD834\uDEF1\uD834\uDEEA\uD834\uDEE0")); // 100_000
+		System.out.println(""+backConvert("\uD834\uDEE9\uD834\uDEEE\uD834\uDEF3\uD834\uDEF3")); // 3_999
 	}
 
 }
