@@ -57,7 +57,6 @@ public class Part3 {
 
 		while (matcher.find()) {
 			String word = matcher.group(1);
-			//System.out.println("Match: " + word);
 			Matcher prevMatcher = Pattern.compile("\\b("+word+")\\b", Pattern.CASE_INSENSITIVE).matcher(input.substring(0, matcher.start(1)));
 			int prevStart = -1;
 			int prevEnd = -1;
@@ -67,16 +66,12 @@ public class Part3 {
 			}
 
 			if(prevStart < 0 || prevEnd < 0) {
-				//System.out.println("Previous not found, regex is "+prevMatcher.pattern().pattern());
 				matcher.appendReplacement(result, word);
 				continue;
 			}
 
 			if(result.substring(prevStart, prevEnd).equals(input.substring(prevStart, prevEnd))) {
-				//System.out.println("swapping case");
 				word = swapCase(word);
-			} else {
-				//System.out.println("\""+result.substring(prevStart, prevEnd)+"\" != \""+input.substring(prevStart, prevEnd)+"\"");
 			}
 
 			matcher.appendReplacement(result, word);
