@@ -62,16 +62,21 @@ public class Part1 {
 		Matcher matcher = PATTERN.matcher(input);
 		int lastNameMaxLen = 0;
 		int firstNameMaxLen = 0;
+		int usernameMaxLen = 0;
 		while (matcher.find()) {
 			int lastNameLen = matcher.group(4).length();
 			int firstNameLen = matcher.group(2).length();
 			int midNameLen = matcher.group(3) == null ? 0 : matcher.group(3).length()+1;
+			int usernameLen = matcher.group(1).length();
 
 			if (lastNameLen > lastNameMaxLen) {
 				lastNameMaxLen = lastNameLen;
 			}
 			if (firstNameLen + midNameLen > firstNameMaxLen) {
 				firstNameMaxLen = firstNameLen + midNameLen;
+			}
+			if (usernameLen > usernameMaxLen) {
+				usernameMaxLen = usernameLen;
 			}
 		}
 
@@ -88,13 +93,17 @@ public class Part1 {
 			String lastName = matcher.group(4);
 			String firstName = matcher.group(2);
 			String midName = matcher.group(3) == null ? "" : (" "+matcher.group(3));
+			String username = matcher.group(1);
 
 			result.append(lastName)
 					.append(" ".repeat(lastNameMaxLen - lastName.length()))
 					.append(firstName)
 					.append(midName)
 					.append(" ".repeat(firstNameMaxLen - (firstName.length() + midName.length())))
-					.append(matcher.group(1));
+					.append(username);
+			if(!matcher.hitEnd()) {
+				result.append(" ".repeat(usernameMaxLen - username.length()));
+			}
 		}
 
 		return result.toString().trim();
