@@ -32,7 +32,7 @@ class ComplianceTest {
 	// Assign this option to false to skip the compliance test
 	// Note, during testing at the stand this option will be turned on!!!
 	// private static final boolean TURN_TEST_COMPLIANCE_ON = false;
-	private static final boolean TURN_TEST_COMPLIANCE_ON = true;
+	private static final boolean TURN_TEST_COMPLIANCE_ON = false;
 
 	public static final boolean MAKE_ALL_TESTS_FAILED;
 

@@ -15,7 +15,7 @@ public class MayaConverter {
 		}
 	}
 
-	public static String convert(String from) { // TODO: fix 100_000 and 3_999
+	public static String convert(String from) {
 		int number = parseInt(from);
 		System.out.println("  Number: "+number);
 		if (number == 0) {

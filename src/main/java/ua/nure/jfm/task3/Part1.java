@@ -8,7 +8,9 @@ import static ua.nure.jfm.task3.Utils.getContent;
 public class Part1 {
 	
     private static final String PATH = "part1.txt";
-	private static final Pattern PATTERN = Pattern.compile("^(\\w+);([\\w\\p{IsCyrillic}-]+) (?:([\\w\\p{IsCyrillic}]+) )?([\\w\\p{IsCyrillic}]+);(\\w+@\\w{1,256}\\.\\w+)", Pattern.MULTILINE);
+	private static final Pattern PATTERN = Pattern.compile(
+			"^(\\w+);([\\w\\p{IsCyrillic}-]+) (?:([\\w\\p{IsCyrillic}]+) )?([\\w\\p{IsCyrillic}]+);(\\w+@\\w{1,256}\\.\\w+)",
+			Pattern.MULTILINE);
 
 	public static void main(String[] args) {
 		System.setProperty("file.encoding", "windows-1251");
