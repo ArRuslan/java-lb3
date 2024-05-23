@@ -1,15 +1,12 @@
 package ua.nure.jfm.task3;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ua.nure.jfm.task3.Utils.getContent;
 
 public class Part2 {
-    private static final String PATTERN = "(?<=[^\\S]|^)\\S+(?=[^\\S]|$)";
+    private static final String PATTERN_FORMAT = "(?<=[^\\S]|^)\\S{%s}(?=[^\\S]|$)";
     private static final String PATH = "part2.txt";
 
     public static void main(String[] args) {
@@ -21,49 +18,40 @@ public class Part2 {
     }
 
     public static String convert(String input, int k) {
-        Pattern pattern = Pattern.compile(PATTERN);
-        Matcher matcher = pattern.matcher(input);
         StringBuilder result = new StringBuilder(k+":");
+        int lastLength = 0;
 
-        /*while (matcher.find()) {
+        for(int i = 1; i <= k; i++) {
+            int nextLength = 0;
+            Pattern pattern = Pattern.compile(String.format(PATTERN_FORMAT, (lastLength + 1)+","));
+            Matcher matcher = pattern.matcher(input);
+            if(!matcher.find()) {
+                return "";
+            }
+            matcher.reset();
+
+            while (matcher.find()) {
+                String word = matcher.group();
+                int length = word.length();
+
+                if(nextLength == 0 || nextLength > length) {
+                    nextLength = length;
+                }
+            }
+
+            lastLength = nextLength;
+        }
+
+        Pattern pattern = Pattern.compile(String.format(PATTERN_FORMAT, lastLength));
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
             String word = matcher.group();
 
-            int length = word.length();
-            if (length != k || result.indexOf(word) != -1) {
+            if(result.indexOf(word) != -1) {
                 continue;
             }
 
-            if (!result.isEmpty()) {
-                result.append(" ");
-            }
-            result.append(word);
-        }
-
-        return result.toString();*/
-
-        HashMap<Integer, LinkedHashSet<String>> words = new HashMap<>();
-
-        while (matcher.find()) {
-            LinkedHashSet<String> current;
-            String word = matcher.group();
-            int length = word.length();
-
-            if (!words.containsKey(length)) {
-                current = new LinkedHashSet<>();
-                words.put(length, current);
-            } else {
-                current = words.get(length);
-            }
-
-            current.add(word);
-        }
-
-        if(k > words.size()) {
-            return "";
-        }
-
-        int needLen = words.keySet().stream().sorted().toList().get(k-1);
-        for(String word : words.get(needLen)) {
             result.append(" ").append(word);
         }
 
